@@ -19,7 +19,10 @@ class RequestTransformerTest extends TestCase
         $this->swooleRequest = $this->getMockBuilder(Request::class)->getMock();
         $this->swooleRequest->server = [
             'request_method' => 'get',
-            'request_uri' => 'some-uri',
+            'request_uri' => '/some-uri',
+        ];
+        $this->swooleRequest->header = [
+            'host' => 'example.com',
         ];
 
         $this->requestTransformer = new RequestTransformer(
@@ -53,10 +56,13 @@ class RequestTransformerTest extends TestCase
      */
     public function postDataGetsCopiedIfExistsAndIsMultipartFormData()
     {
-        $this->swooleRequest->header = [
-            'content-type' => 'multipart/form-data',
-            'foo' => 'bar'
-        ];
+        $this->swooleRequest->header = array_merge(
+            $this->swooleRequest->header,
+            [
+                'content-type' => 'multipart/form-data',
+                'foo' => 'bar'
+            ]
+        );
         $this->swooleRequest->post = [
             'foo' => 'bar'
         ];
@@ -70,10 +76,34 @@ class RequestTransformerTest extends TestCase
     /**
      * @test
      */
+    public function postDataGetsCopiedIfExistsAndXWwwFormUrlEncoded()
+    {
+        $this->swooleRequest->header = array_merge(
+            $this->swooleRequest->header,
+            [
+                'content-type' => 'application/x-www-form-urlencoded'
+            ]
+        );
+        $this->swooleRequest->post = [
+            'foo' => 'bar'
+        ];
+
+        $psrRequest = $this->requestTransformer->toPsr($this->swooleRequest);
+        $this->assertSame([
+            'foo' => 'bar'
+        ], $psrRequest->getParsedBody());
+    }
+
+    /**
+     * @test
+     */
     public function uploadedFilesAreCopiedProperty()
     {
         // Arrange
-        $this->swooleRequest->header = ['content-type' => 'multipart/form-data'];
+        $this->swooleRequest->header = array_merge(
+            $this->swooleRequest->header,
+            ['content-type' => 'multipart/form-data']
+        );
         $this->swooleRequest->files = [
             'name1' => [
                 'tmp_name' => 'tmp1',
@@ -125,5 +155,14 @@ class RequestTransformerTest extends TestCase
         $cookies = Cookies::fromRequest($psrRequest)->getAll();
         $this->assertEquals(count($cookies), 3);
         $this->assertEquals(FigRequestCookies::get($psrRequest, 'some-cookie-2')->getValue(), 'some-value-2');
+    }
+
+    /**
+     * @test
+     */
+    public function hostIsCopiedProperly()
+    {
+        $psrRequest = $this->requestTransformer->toPsr($this->swooleRequest);
+        $this->assertEquals($this->swooleRequest->header['host'], $psrRequest->getUri()->getHost());
     }
 }

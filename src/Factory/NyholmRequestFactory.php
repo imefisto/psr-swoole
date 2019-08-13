@@ -5,8 +5,10 @@ use PsrSwoole\RequestFactory;
 use Swoole\Http\Request;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 use Nyholm\Psr7\ServerRequest as NyholmServerRequest;
 use Nyholm\Psr7\UploadedFile as NyholmUploadedFile;
+use Nyholm\Psr7\Uri as NyholmUri;
 
 class NyholmRequestFactory implements RequestFactory
 {
@@ -14,7 +16,7 @@ class NyholmRequestFactory implements RequestFactory
     {
         return new NyholmServerRequest(
             $request->server['request_method'],
-            $request->server['request_uri']
+            ''
         );
     }
 
@@ -27,5 +29,10 @@ class NyholmRequestFactory implements RequestFactory
             $swooleUploadedFile['name'],
             $swooleUploadedFile['type']
         );
+    }
+
+    public function createUri(string $uri): UriInterface
+    {
+        return new NyholmUri($uri);
     }
 }
