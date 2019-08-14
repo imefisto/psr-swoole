@@ -18,6 +18,7 @@ class RequestTransformer
         $psrRequest = $this->handlePostData($psrRequest, $swooleRequest);
         $psrRequest = $this->handleUploadedFiles($psrRequest, $swooleRequest);
         $psrRequest = $this->copyCookies($psrRequest, $swooleRequest);
+        $psrRequest = $this->copyHeaders($psrRequest, $swooleRequest);
         return $this->copyBody($psrRequest, $swooleRequest);
     }
 
@@ -54,6 +55,15 @@ class RequestTransformer
         foreach ($swooleRequest->cookie as $name => $value) {
             $cookie = Cookie::create($name, $value);
             $psrRequest = FigRequestCookies::set($psrRequest, $cookie);
+        }
+
+        return $psrRequest;
+    }
+
+    private function copyHeaders($psrRequest, $swooleRequest)
+    {
+        foreach ($swooleRequest->header as $key => $val) {
+            $psrRequest = $psrRequest->withHeader($key, $val);
         }
 
         return $psrRequest;

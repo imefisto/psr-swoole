@@ -54,6 +54,21 @@ class RequestTransformerTest extends TestCase
     /**
      * @test
      */
+    public function headerGetsCopiedCorrectly()
+    {
+        $this->swooleRequest->header = array_merge(
+            $this->swooleRequest->header,
+            [
+                'foo' => 'bar'
+            ]
+        );
+        $psrRequest = $this->requestTransformer->toPsr($this->swooleRequest);
+        $this->assertEquals($this->swooleRequest->header['foo'], $psrRequest->getHeader('foo')[0]);
+    }
+
+    /**
+     * @test
+     */
     public function postDataGetsCopiedIfExistsAndIsMultipartFormData()
     {
         $this->swooleRequest->header = array_merge(
