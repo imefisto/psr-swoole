@@ -18,7 +18,6 @@ class RequestTransformer
         $psrRequest = $this->handlePostData($psrRequest, $swooleRequest);
         $psrRequest = $this->handleUploadedFiles($psrRequest, $swooleRequest);
         $psrRequest = $this->copyCookies($psrRequest, $swooleRequest);
-        $psrRequest = $this->initUri($psrRequest, $swooleRequest);
         return $this->copyBody($psrRequest, $swooleRequest);
     }
 
@@ -58,15 +57,6 @@ class RequestTransformer
         }
 
         return $psrRequest;
-    }
-
-    private function initUri($psrRequest, $swooleRequest)
-    {
-        $uri = '//' . $swooleRequest->header['host']
-            . $swooleRequest->server['request_uri']
-            . (isset($swooleRequest->server['query_string']) ? '?' . $swooleRequest->server['query_string'] : '')
-            ;
-        return $psrRequest->withUri($this->factory->createUri($uri));
     }
 
     private function copyBody($psrRequest, $swooleRequest)

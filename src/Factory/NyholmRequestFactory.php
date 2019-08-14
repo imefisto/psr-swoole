@@ -16,8 +16,19 @@ class NyholmRequestFactory implements RequestFactory
     {
         return new NyholmServerRequest(
             $request->server['request_method'],
-            ''
+            $this->initUri($request)
         );
+    }
+
+    private function initUri($swooleRequest)
+    {
+        return '//'
+            . $swooleRequest->header['host']
+            . $swooleRequest->server['request_uri']
+            . (isset($swooleRequest->server['query_string']) 
+                ? '?' . $swooleRequest->server['query_string'] 
+                : '')
+            ;
     }
 
     public function createUploadedFile(array $swooleUploadedFile): UploadedFileInterface
