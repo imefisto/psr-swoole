@@ -14,24 +14,25 @@ class RequestFactory extends TestCase
         $this->swooleRequest->server = [
             'host' => 'example.com',
             'request_method' => 'get',
-            'request_uri' => 'some-uri',
+            'request_uri' => '/some-uri',
         ];
+        $this->uriString = 'example.com/some-uri';
         $this->factory = null;
     }
 
     /**
      * @test
      */
-    public function createsNyholmPsrRequest()
+    public function createsPsrRequest()
     {
-        $psrRequest = $this->factory->createRequest($this->swooleRequest);
+        $psrRequest = $this->factory->createRequest($this->swooleRequest, $this->uriString);
         $this->assertInstanceOf(ServerRequestInterface::class, $psrRequest);
     }
 
     /**
      * @test
      */
-    public function createsNyholmPsrUploadedFile()
+    public function createsPsrUploadedFile()
     {
         $swooleUploadedFile = [
             'tmp_name' => 'tmp1',
@@ -56,7 +57,7 @@ class RequestFactory extends TestCase
     /**
      * @test
      */
-    public function createsNyholmPsrUri()
+    public function createsPsrUri()
     {
         $host = 'example.com';
         $port = 8080;
