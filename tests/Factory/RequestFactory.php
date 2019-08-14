@@ -11,12 +11,13 @@ class RequestFactory extends TestCase
     public function setUp(): void
     {
         $this->swooleRequest = $this->getMockBuilder(Request::class)->getMock();
-        $this->swooleRequest->server = [
+        $this->swooleRequest->header = [
             'host' => 'example.com',
+        ];
+        $this->swooleRequest->server = [
             'request_method' => 'get',
             'request_uri' => '/some-uri',
         ];
-        $this->uriString = 'example.com/some-uri';
         $this->factory = null;
     }
 
@@ -25,7 +26,7 @@ class RequestFactory extends TestCase
      */
     public function createsPsrRequest()
     {
-        $psrRequest = $this->factory->createRequest($this->swooleRequest, $this->uriString);
+        $psrRequest = $this->factory->createRequest($this->swooleRequest);
         $this->assertInstanceOf(ServerRequestInterface::class, $psrRequest);
     }
 
