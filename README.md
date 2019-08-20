@@ -5,6 +5,10 @@ Library to convert Swoole requests to PSR requests and PSR responses to Swoole r
 
 This library is based on [Slim Swoole](https://github.com/pachico/slim-swoole). 
 
+## Install
+
+composer require imefisto/psr-swoole
+
 ## Why to start a new library?
 
 While [Slim Swoole](https://github.com/pachico/slim-swoole) assumes that you're using Slim 3, the PSR Swoole library pretends to be framework agnostic. You'll be able to convert Swoole requests to PSR requests, pass them to a some logic (ie: the slim framework) obtaining a PSR response and merging it with a Swoole response.
