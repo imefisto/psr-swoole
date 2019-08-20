@@ -1,5 +1,5 @@
 # psr7swoole
-Convenient library to convert Swoole requests to PSR requests and PSR responses to Swoole responses
+Library to convert Swoole requests to PSR requests and PSR responses to Swoole responses
 
 ## Overview
 

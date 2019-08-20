@@ -1,7 +1,7 @@
 {
   "name": "imefisto/psr-swoole",
   "type": "library",
-  "description": "Convenient library to convert Swoole requests to PSR requests and PSR responses to Swoole responses",
+  "description": "Library to convert Swoole requests to PSR requests and PSR responses to Swoole responses",
   "keywords": [
     "psr",
     "swoole",
